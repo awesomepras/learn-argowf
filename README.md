@@ -1,6 +1,10 @@
 # learn-argowf
 How to learn ArgoWF using various online resources
 
+# What is Argo WF:
+Argo Workflows is an open-source container-native workflow engine for orchestrating parallel jobs on Kubernetes (K8s).
+It is implemented as a K8s custom resource definition (CRD).
+
 ## Resources:
 * Get started with Scenarios:  https://killercoda.com/argoproj/course/argo-workflows
 * Argo Workflow docs: https://argoproj.github.io/argo-workflows/workflow-concepts/

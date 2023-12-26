@@ -111,6 +111,7 @@ Print out the token:
 You should see something like the following:
 
 >_Bearer eyJhbGciOiJSUzI1NiIsImtpZCI6..._
+
 To use the token, you add it as an Authorization header to your HTTP request:
 
 `curl http://localhost:2746/api/v1/info -H "Authorization: $ARGO_TOKEN"`
