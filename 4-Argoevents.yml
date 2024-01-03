@@ -1,0 +1,13 @@
+how to trigger ArgoWF from github
+
+Create Github webhook
+and then create the following in kubernetes
+Event source(receives event from webhook and writes to event bus) -> Event Bus -> Sensor(listen to event from event bus & trigger the actions) -> trigger workflow template
+https://argoproj.github.io/argo-events/eventsources/setup/github/
+
+once Event source is created, it automatically creates a service and a pod. The name for the service is in {event-source-name}-eventsource-svc format
+further create an ingress to access it from argo endpoint.
+
+https://argoproj.github.io/argo-events/eventsources/naming/ This further explains how to create Event source correctly.
+
+Finally, we can create a sensor file and define trigger conditions if any (https://argoproj.github.io/argo-events/sensors/trigger-conditions/).

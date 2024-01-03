@@ -17,6 +17,9 @@ argo submit -n argo --serviceaccount argo --watch https://raw.githubusercontent.
 ## Install Minio Object
 MinIO Object Storage for Kubernetes
 https://min.io/docs/minio/kubernetes/upstream/index.html
+Community docs:
+https://github.com/minio/minio/tree/master/helm/minio
+
 
 `curl https://raw.githubusercontent.com/minio/docs/master/source/extra/examples/minio-dev.yaml -O`
 
@@ -38,14 +41,37 @@ In kodekloud, the master node has taints if u created a 2 node cluster. The work
  k taint nodes controlplane node-role.kubernetes.io/control-plane:NoSchedule-
  kubectl taint nodes controlplane node-role.kubernetes.io/master:NoSchedule- 
 
+kubectl get pods -n minio-dev
+
+kubectl logs pod/minio -n minio-dev
+
 *Port forward :*
-`kubectl port-forward pod/minio 9000 9090 -n minio-dev`
+`kubectl port-forward --address 0.0.0.0 pod/minio 9000 9090 -n minio-dev &`
+
+### create service 
+If the cluster is going to use nginx-ingress controller, expose the service using externalName
+
+```yaml
+apiVersion: v1
+kind: Service
+metadata:
+  name: minio
+  namespace: minio-dev
+spec:
+  type: ExternalName
+  externalName: <servicename>.<namespace>.svc.cluster.local #or any external svc
+  ports:
+  - name: minio
+    port: 9000
+    targetPort: 9090    
+  selector:
+    app: minioapiVersion: v1
+```
 
 ### Install minio client:
 https://min.io/docs/minio/linux/reference/minio-mc.html#command-mc
 
 ```bash
-
 curl https://dl.min.io/client/mc/release/linux-amd64/mc \
   --create-dirs \
   -o $HOME/minio-binaries/mc
@@ -61,9 +87,15 @@ mc admin info k8s-minio-dev
 
 ---
 ## Whats next
+#Add STS:
+https://gist.github.com/manics/305f4cc56d0ac6431893cde17b1ba8c4
+
 
 ### MinIo Operator 
 _https://min.io/docs/minio/kubernetes/upstream/operations/installation.html_ 
+
+The following approach can be used to install minio as an operator
+
 ```bash
 wget https://github.com/minio/operator/releases/download/v5.0.11/kubectl-minio_5.0.11_linux_amd64
 mv kubectl-minio_5.0.11_linux_amd64 kubectl-minio
@@ -137,7 +169,7 @@ TEST SUITE: None
 NOTES:
 provisioner installed
 
-Access key: 9e5qDQht3QTIWrhP
-Secret Key: nFPOjXhdlaBPLD3CRtMyD586rdc1OcVK
+Access key: 9e5qD
+Secret Key: nFPOjXhdlaB
 ```
 --
